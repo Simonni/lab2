@@ -1,6 +1,7 @@
 const $main = $('main')
 const $selector = $('#image-selector')
 const allHorns = []
+const allKeywords = []
 
 const apiURL = 'https://raw.githubusercontent.com/Simonni/lab2/master/page-1.json'
 
@@ -27,16 +28,27 @@ $($selector).on('change', () => {
   $(`.${event.target.value}`).show()
 })
 
+let duplicate = function(arr, dup){
+  let count = 0
+  for(let i=0; i<arr.length; i++){
+    if(arr[i]===dup){
+      count++
+    }
+  }
+  return count
+}
+
 $.getJSON(apiURL)
   .then(response => {
     response.forEach(horn => {
       let newHorn = new Horn(horn.title, horn.image_url, horn.description, horn.keyword )
       newHorn.displayHorn()
       allHorns.push(newHorn)
-      $selector.append(`<option value=${newHorn.keyword}>${newHorn.keyword}</option>`)
+      allKeywords.push(newHorn.keyword)
+      if(duplicate(allKeywords, newHorn.keyword)===1){
+        $selector.append(`<option value=${newHorn.keyword}>${newHorn.keyword}</option>`)
+      
+      }
+    
     })
-    console.log($(`option[value='narwhal']`))
-    if($(`option[value='Horn']`[0])) {
-      console.log('nope')
-    }
   })
